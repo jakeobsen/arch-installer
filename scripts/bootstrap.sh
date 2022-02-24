@@ -285,6 +285,7 @@ if [ "$iWantI3" == "yes" ]; then
     cd
     arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
     arch-chroot /mnt su $newUsername -c "fc-cache -f /home/$newUsername/.local/share/fonts"
+    wget -O /mnt/home/$newUsername/.config/wallpaper.png https://install.unlab.dev/files/wallpaper.png
 
 else
     arch-chroot /mnt pacman -Sy --noconfirm dhcpcd wpa_supplicant netctl ifplugd
