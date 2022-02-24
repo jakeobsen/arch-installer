@@ -1,0 +1,8 @@
+# Do not do anything if non-interactive
+[[ $- != *i* ]] && return
+export PS1='\[\e[0;1;31m\]\h \[\e[0;1;93m\]\w \[\e[0;1;95m\]\$ \[\e[0m\]'
+export GPG_TTY=$(tty)
+
+[ -f "$HOME/.config/vim/init.vim" ] \
+    && export VIMINIT="source $HOME/.config/vim/init.vim"
+
