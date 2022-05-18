@@ -1,0 +1,1 @@
+[ ! -f /usr/bin/wget ] && pacman -Sy --noconfirm wget

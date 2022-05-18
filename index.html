@@ -1,46 +1,6 @@
-# curl install.unlab.dev | bash<div style="display:none;">
-
-ARCH_INSTALLER="yes"
-# MESSAGE="\n\nERROR: This needs to run under the Arch Install environment.\n\n"
-
-blkid /dev/loop0 | grep squashfs >> /dev/null
-[ "$?" != "0" ] && ARCH_INSTALLER="no" #&& echo -e $MESSAGE && exit
-
-df / | grep airootfs >> /dev/null
-[ "$?" != "0" ] && ARCH_INSTALLER="no" #&& echo -e $MESSAGE && exit
-
-grep "Arch Linux" /etc/os-release >> /dev/null
-[ "$?" != "0" ] && ARCH_INSTALLER="no" #&& echo -e $MESSAGE && exit
-
+# curl -s https://install.unlab.dev | bash<div style="display:none;">
 [ "$EUID" -ne 0 ] && echo -e "\n\nThis script must be run as root." && exit 1
 
-rm -R /var/lib/pacman/sync/
-echo 'Server = https://mirror.unlab.dev/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
-pacman -Sy
-
-if [ ! -f /usr/bin/dialog ]; then
-    pacman -Sy --noconfirm dialog
-fi
-
-if [ ! -f /usr/bin/wget ]; then
-    pacman -Sy --noconfirm wget
-fi
-
-menu=""
-d='dialog --clear --stdout --title Unlab.dev'
-cd /tmp
-
-if [ $ARCH_INSTALLER == "yes" ]; then
-menu=$(dialog --clear --stdout --title "Unlab.dev" --menu "" 0 0 1 \
-        "bootstrap" "Install Arch Linux system" \
-        "mount" "Mount and decrypt" \
-        "cleanup" "Unmount and encrypt" \
-)
-else
-menu=$(dialog --clear --stdout --title "Unlab.dev" --menu "" 0 0 1 \
-        "macbookair61-wifi" "Install WiFi on 11\" Apple Macbook Air mid-2013" \
-)
-fi
-
-[ "$menu" != "" ] \
-    && curl https://install.unlab.dev/scripts/$menu.sh | bash
+blkid | grep ARCH | grep -q iso9660 \
+    && curl -s https://install.unlab.dev/loader/bootstrap.sh | bash \
+    || curl -s https://install.unlab.dev/loader/system.sh | bash
