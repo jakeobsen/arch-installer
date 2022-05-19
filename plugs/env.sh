@@ -47,18 +47,18 @@ $d --yesno "This will erase all data on this system, are you sure you want to do
 [ "$?" != "0" ] && exit 1
 
 cat>/tmp/env<<EOF
-export serverURL=https://install.unlab.dev
-export targetDisk=$targetDisk
-export vgName=$vgName
-export newHostname=$newHostname
-export newUsername=$newUsername
-export newUsernameName=$newUsernameName
-export newPassword=$newPassword
-export newKeyboard=$newKeyboard
-export newLocale=$newLocale
-export newTimezone=$newTimezone
-export passwordLuks=$passwordLuks
-export iWantI3=$iWantI3
-export iWantReboot=$iWantReboot
-export envSourced=YES
+export serverURL='https://install.unlab.dev'
+export targetDisk='$targetDisk'
+export vgName='$vgName'
+export newHostname='$newHostname'
+export newUsername='$newUsername'
+export newUsernameName='$newUsernameName'
+export newPassword='$newPassword'
+export newKeyboard='$newKeyboard'
+export newLocale='$newLocale'
+export newTimezone='$newTimezone'
+export passwordLuks='$passwordLuks'
+export iWantI3='$iWantI3'
+export iWantReboot='$iWantReboot'
+export envSourced='YES'
 EOF
