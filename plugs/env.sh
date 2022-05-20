@@ -1,4 +1,6 @@
 #!/bin/bash
+[ -f /etc/bootstrap ] && cp /etc/bootstrap /tmp/env && exit 0
+
 d='dialog --clear --stdout --title Unlab.dev'
 [ -f /tmp/env ] && $d --yesno "Reuse pre-configured install environment?" 0 0
 [ "$?" == "0" ] && exit 0 || rm /tmp/env
