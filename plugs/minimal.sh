@@ -147,6 +147,7 @@ arch-chroot /mnt pacman -Sy --noconfirm \
     python-pylint \
     autopep8 \
     python-pip \
+    go
 
 # Firewall
 arch-chroot /mnt systemctl enable ufw
@@ -171,7 +172,7 @@ chmod 600 /mnt/home/$newUsername/.ssh/id_ed25519 /mnt/home/$newUsername/.ssh/id_
 # Bash
 grep -q AAIBashInConfig /etc/bash.bashrc
 [ $? -ne 0 ] && cat>>/mnt/etc/bash.bashrc<<EOF
-[ -d \$HOME/.config/bashrc/ ] && source <(cat \$HOME/.config/bash/*) # AAIBashInConfig
+[ -d \$HOME/.config/bash/ ] && source <(cat \$HOME/.config/bash/*) # AAIBashInConfig
 EOF
 rm /mnt/home/$newUsername/.bash*
 mkdir -p /mnt/home/$newUsername/.config/bash/
@@ -181,3 +182,8 @@ EOF
 
 # Make user own everything
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
+
+# Sudoers - wheel
+cat>/etc/sudoers.d/wheel<<EOF
+%wheel ALL=(ALL:ALL) ALL
+EOF
