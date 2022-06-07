@@ -176,14 +176,26 @@ grep -q AAIBashInConfig /etc/bash.bashrc
 EOF
 rm /mnt/home/$newUsername/.bash*
 mkdir -p /mnt/home/$newUsername/.config/bash/
-cat>/mnt/home/$newUsername/.config/bash/ps1<<EOF
+mkdir -p /mnt/home/$newUsername/.cache/
+cat>/mnt/home/$newUsername/.config/bash/00-ps1.sh<<EOF
 export PS1='\[\e[0;1;93m\]\w \[\e[0;1;95m\]\\$ \[\e[0m\]'
+EOF
+cat>/mnt/home/$newUsername/.config/bash/00-history.sh<<EOF
+HISTSIZE=5000
+HISTFILESIZE=10000
+HISTFILE="\$HOME/.cache/bash_history"
+export PROMPT_COMMAND="history -a \$HISTFILE; history -c; history -r \$HISTFILE; \$PROMPT_COMMAND"
+EOF
+cat>/mnt/home/$newUsername/.config/bash/00-path.sh<<EOF
+TMP_PATHS=( "\$HOME/.local/bin/" "\$HOME/.bin/" "\$HOME/bin/" )
+for TMP_PATH in "\${TMP_PATHS[@]}"; do [ -d \$TMP_PATH ] && echo export PATH=\$TMP_PATH:\$PATH; done
+unset paths
 EOF
 
 # Make user own everything
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
 
 # Sudoers - wheel
-cat>/etc/sudoers.d/wheel<<EOF
-%wheel ALL=(ALL:ALL) ALL
-EOF
+#cat>/mnt/etc/sudoers.d/wheel<<EOF
+#%wheel ALL=(ALL:ALL) ALL
+#EOF
