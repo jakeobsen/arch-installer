@@ -170,6 +170,9 @@ arch-chroot /mnt ssh-keygen -t ed25519 -a 1000 -C $newUsername@$newHostname -f /
 chmod 600 /mnt/home/$newUsername/.ssh/id_ed25519 /mnt/home/$newUsername/.ssh/id_ed25519.pub
 
 # Bash
+# This bash configuration removes the bash config files from the home directory and also makes it
+# easier to split up the bash config into multiple files. Splitting the bashrc file into multiple
+# smaller files also makes it easier to write small blocks of individual bash code / aliases etc.
 grep -q AAIBashInConfig /etc/bash.bashrc
 [ $? -ne 0 ] && cat>>/mnt/etc/bash.bashrc<<EOF
 [ -d \$HOME/.config/bash/ ] && source <(cat \$HOME/.config/bash/*) # AAIBashInConfig
