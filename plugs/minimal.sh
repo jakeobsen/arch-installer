@@ -153,7 +153,9 @@ arch-chroot /mnt pacman -Sy --noconfirm \
 arch-chroot /mnt systemctl enable ufw
 
 # Setup sudo
-sed -i '0,/# %wheel/s/# %wheel/%wheel/' /mnt/etc/sudoers
+cat>/mnt/etc/sudoers.d/wheel<<EOF
+%wheel ALL=(ALL:ALL) ALL
+EOF
 
 # Setup user accounts
 echo "Adding account"
@@ -197,8 +199,3 @@ EOF
 
 # Make user own everything
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
-
-# Sudoers - wheel
-#cat>/mnt/etc/sudoers.d/wheel<<EOF
-#%wheel ALL=(ALL:ALL) ALL
-#EOF
