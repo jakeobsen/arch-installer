@@ -1,6 +1,6 @@
 source /tmp/env; [ "$envSourced" != "YES" ] && exit 255
 
-if [ "$iWantI3" == "yes" ]; then
+if [ "$iWantArchIso" == "yes" ]; then
 
 # Cleanup
 rm -rf /mnt/home/$newUsername/jakeobsen-archlive
