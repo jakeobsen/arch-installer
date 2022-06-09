@@ -26,19 +26,23 @@ diskinfo=$(echo "Your target disk should be of at least 120GB - it WILL be erase
 $d --msgbox "$diskinfo" 0 0
 $d --msgbox "The system will now attempt to auto locate your target disk." 0 0
 
-targetDisk=$($d --no-cancel --ok-label Next --inputbox "[1/11] Target Disk" 0 0 "$targetDisk")
-vgName=$($d --no-cancel --ok-label Next --inputbox "[2/11] Volume Group Name" 0 0)
-newHostname=$($d --no-cancel --ok-label Next --inputbox "[3/11] Hostname" 0 0)
-newUsername=$($d --no-cancel --ok-label Next --inputbox "[4/11] Username" 0 0)
-newUsernameName=$($d --no-cancel --ok-label Next --inputbox "[5/11] Real name" 0 0)
-newPassword=$($d --no-cancel --ok-label Next --insecure --passwordbox "[6/11] User Password" 0 0)
-newKeyboard=$($d --no-cancel --ok-label Next --inputbox "[7/11] Keyboard layout" 0 0 "uk")
-newLocale=$($d --no-cancel --ok-label Next --inputbox "[8/11] System locale" 0 0 "en_UK")
-newTimezone=$($d --no-cancel --ok-label Next --inputbox "[9/11] Timezone" 0 0 "UTC")
-passwordLuks=$($d --no-cancel --ok-label Next --insecure --passwordbox "[10/11] LUKS Password" 0 0)
+targetDisk=$($d --no-cancel --ok-label Next --inputbox "[1/12] Target Disk" 0 0 "$targetDisk")
+vgName=$($d --no-cancel --ok-label Next --inputbox "[2/12] Volume Group Name" 0 0)
+newHostname=$($d --no-cancel --ok-label Next --inputbox "[3/12] Hostname" 0 0)
+newUsername=$($d --no-cancel --ok-label Next --inputbox "[4/12] Username" 0 0)
+newUsernameName=$($d --no-cancel --ok-label Next --inputbox "[5/12] Real name" 0 0)
+newPassword=$($d --no-cancel --ok-label Next --insecure --passwordbox "[6/12] User Password" 0 0)
+newKeyboard=$($d --no-cancel --ok-label Next --inputbox "[7/12] Keyboard layout" 0 0 "uk")
+newLocale=$($d --no-cancel --ok-label Next --inputbox "[8/12] System locale" 0 0 "en_UK")
+newTimezone=$($d --no-cancel --ok-label Next --inputbox "[9/12] Timezone" 0 0 "UTC")
+passwordLuks=$($d --no-cancel --ok-label Next --insecure --passwordbox "[10/12] LUKS Password" 0 0)
+
+iWantArchIso="no"
+$d --yesno "[11/12] Do you want to build an unattended arch install iso for future use?" 0 0
+[ "$?" == "0" ] && iWantArchIso="yes"
 
 iWantI3="no"
-$d --yesno "[11/11] Do you want to install the i3 window manager?" 0 0
+$d --yesno "[12/12] Do you want to install the i3 window manager?" 0 0
 [ "$?" == "0" ] && iWantI3="yes"
 
 iWantReboot="no"
@@ -62,5 +66,6 @@ export newTimezone='$newTimezone'
 export passwordLuks='$passwordLuks'
 export iWantI3='$iWantI3'
 export iWantReboot='$iWantReboot'
+export iWantArchIso='$iWantArchIso'
 export envSourced='YES'
 EOF
