@@ -18,11 +18,11 @@ wipefs -a -f $targetDisk
 parted $targetDisk mklabel gpt
 
 # Create ESP EFI boot partition
-parted $targetDisk mkpart BOOT fat32 2048s 264191s
+parted $targetDisk mkpart BOOT fat32 2048s 2099199s
 parted $targetDisk set 1 esp on
 
 # Create LUKS partition
-parted $targetDisk mkpart ROOT ext4 264192s 100%
+parted $targetDisk mkpart ROOT ext4 2099200s 100%
 
 # Assign disks
 bootDisk=$(blkid | grep $targetDisk | grep BOOT | cut -d: -f1)

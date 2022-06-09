@@ -17,12 +17,14 @@ arch-chroot /mnt pacman -Sy --noconfirm git archiso git
 mkdir -p /mnt/home/$newUsername/unlab-archlive/temp
 cd /mnt/home/$newUsername/unlab-archlive
 git clone https://github.com/jakeobsen/arch-archiso
-cp -r /tmp/env /mnt/home/$newUsername/unlab-archlive/arch-archiso/airootfs/etc/bootstrap
 
 # Reset all perms
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
 
 # Build
+touch /mnt/boot/archiso.iso
+chown root:wheel /mnt/boot/archiso.iso
+chmod 664 /mnt/boot/archiso.iso
 cat>>/mnt/home/$newUsername/unlab-archlive/build.sh<<EOF
 #!/bin/bash
 rm -rf rm -rf /home/\$newUsername/unlab-archlive/temp
@@ -30,9 +32,18 @@ mkdir -p rm -rf /home/\$newUsername/unlab-archlive/temp
 cd /home/\$newUsername/unlab-archlive/
 git pull
 sudo mkarchiso -v -w /home/\$newUsername/unlab-archlive/temp /home/\$newUsername/unlab-archlive/arch-archiso
+sudo cp -r /home/$newUsername/unlab-archlive/out/unlab_archlinux-\$(date +%Y.%m.%d)-x86_64.iso /boot/archiso.iso
 EOF
 chmod +x /mnt/home/$newUsername/unlab-archlive/build.sh
 arch-chroot /mnt /home/$newUsername/unlab-archlive/build.sh
+
+# Recovery environment
+cat>/mnt/boot/loader/entries/archiso.conf<<EOF
+title Arch Linux Live/Rescue CD
+linux /live/vmlinuz-linux
+initrd /live/initramfs-linux.img
+options archisobasedir=arch archisolabel=ARCHISO img_dev=/dev/sda1 img_loop=/archiso.iso
+EOF
 
 # Reset all perms
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
