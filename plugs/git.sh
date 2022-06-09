@@ -1,0 +1,1 @@
+[ ! -f /usr/bin/git ] && pacman -Sy --noconfirm git
