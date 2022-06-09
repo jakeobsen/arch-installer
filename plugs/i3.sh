@@ -279,17 +279,15 @@ interval=3
 label=📈
 interval=10
 
-# "disk" is not working for some reason... 
-# It's disabled for now, until I figure out why.
-#[disk]
-#label=💻
-#instance=/
-#interval=60
+[disk]
+label=💻
+command=df -h -P -l "/" | tail -n1 | awk '{print \$4}'
+interval=60
 
-#[disk]
-#label=🏠
-#instance=/home
-#interval=60
+[disk]
+label=🏠
+command=df -h -P -l "/home" | tail -n1 | awk '{print \$4}'
+interval=60
 
 [pacgrade]
 interval=300
@@ -313,10 +311,11 @@ interval=3600
 interval=60
 EOF
 
-mkdir /mnt/home/$newUsername/.local/share/i3blocks/
+mkdir -p /mnt/home/$newUsername/.local/share/i3blocks/
 wget -O /mnt/home/$newUsername/.local/share/i3blocks/i3blocks.tgz $serverURL/files/i3blocks.tgz
 cd /mnt/home/$newUsername/.local/share/i3blocks/
 tar xvzf i3blocks.tgz
+rm i3blocks.tgz
 chmod +x *
 cd
 
