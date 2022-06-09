@@ -1,5 +1,7 @@
 source /tmp/env; [ "$envSourced" != "YES" ] && exit 255
 
+if [ "$iWantReboot" == "yes" ]; then
+
 # i3 packages
 arch-chroot /mnt pacman -Sy --noconfirm \
     mesa \
@@ -319,13 +321,7 @@ rm i3blocks.tgz
 chmod +x *
 cd
 
-# mkdir -p /mnt/home/$newUsername/.local/share/
-# wget -O /mnt/home/$newUsername/.local/share/fonts.tgz $serverURL/tarballz/fonts.tgz
-# cd /mnt/home/$newUsername/.local/share/
-# tar xvzf fonts.tgz
-# cd
-# arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
-# arch-chroot /mnt su $newUsername -c "fc-cache -f /home/$newUsername/.local/share/fonts"
-
 # User own everything
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
+
+fi
