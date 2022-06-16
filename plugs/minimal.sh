@@ -100,7 +100,7 @@ arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt bootctl install
 cat>/mnt/boot/loader/loader.conf<<EOF
 default arch.conf
-timeout 0
+timeout 5
 console-mode max
 editor no
 EOF
@@ -164,13 +164,6 @@ echo "Setting account passwords"
 echo "$newUsername:$newPassword" | arch-chroot /mnt chpasswd
 echo "root:$newPassword" | arch-chroot /mnt chpasswd
 
-# SSH
-mkdir -p /mnt/home/$newUsername/.ssh/
-echo -e "Host gitlab.com\n\tStrictHostKeyChecking no\n" > /mnt/home/$newUsername/.ssh/config
-chmod 600 /mnt/home/$newUsername/.ssh/config
-arch-chroot /mnt ssh-keygen -t ed25519 -a 1000 -C $newUsername@$newHostname -f /home/$newUsername/.ssh/id_ed25519 -N $newPassword
-chmod 600 /mnt/home/$newUsername/.ssh/id_ed25519 /mnt/home/$newUsername/.ssh/id_ed25519.pub
-
 # Bash
 # This bash configuration removes the bash config files from the home directory and also makes it
 # easier to split up the bash config into multiple files. Splitting the bashrc file into multiple
@@ -182,20 +175,37 @@ EOF
 rm /mnt/home/$newUsername/.bash*
 mkdir -p /mnt/home/$newUsername/.config/bash/
 mkdir -p /mnt/home/$newUsername/.cache/
-cat>/mnt/home/$newUsername/.config/bash/00-ps1.sh<<EOF
+cat>/mnt/home/$newUsername/.config/bash/00-unlab.sh<<EOF
+export UNLAB_SERVER="install.unlab.dev"
+export UNLAB_HTTP="https://$UNLAB_SERVER"
+EOF
+cat>/mnt/home/$newUsername/.config/bash/05-ps1.sh<<EOF
 export PS1='\[\e[0;1;93m\]\w \[\e[0;1;95m\]\\$ \[\e[0m\]'
 EOF
-cat>/mnt/home/$newUsername/.config/bash/00-history.sh<<EOF
+cat>/mnt/home/$newUsername/.config/bash/05-history.sh<<EOF
 HISTSIZE=5000
 HISTFILESIZE=10000
 HISTFILE="\$HOME/.cache/bash_history"
 export PROMPT_COMMAND="history -a \$HISTFILE; history -c; history -r \$HISTFILE; \$PROMPT_COMMAND"
 EOF
-cat>/mnt/home/$newUsername/.config/bash/00-path.sh<<EOF
+cat>/mnt/home/$newUsername/.config/bash/05-path.sh<<EOF
 TMP_PATHS=( "\$HOME/.local/bin/" "\$HOME/.bin/" "\$HOME/bin/" )
 for TMP_PATH in "\${TMP_PATHS[@]}"; do [ -d \$TMP_PATH ] && echo export PATH=\$TMP_PATH:\$PATH; done
-unset paths
+unset TMP_PATH
+unset TMP_PATHS
 EOF
+cat>/mnt/home/$newUsername/.config/bash/05-vim.sh<<EOF
+export VIMHOME=\$HOME/.config/vim
+export VIMFILE=\$VIMHOME/init.vim
+export VIMINIT="source \$VIMFILE"
+for TMP_DIR in swap backup undo; do mkdir -p \$VIMHOME/\$TMP_DIR; done
+unset TMP_DIR
+[ ! -f \$VIMFILE ] && curl -s \$UNLAB_SERVER/files/vimrc -o \$VIMFILE
+EOF
+cat>/mnt/home/$newUsername/.config/bash/99-aliases.sh<<EOF
+alias vimpull="curl -s \$UNLAB_SERVER/files/vimrc -o \$VIMFILE"
+EOF
+
 
 # Make user own everything
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername

@@ -5,7 +5,7 @@ d='dialog --clear --stdout --title Unlab.dev'
 [ -f /tmp/env ] && $d --yesno "Reuse pre-configured install environment?" 0 0
 [ "$?" == "0" ] && exit 0 || rm /tmp/env
 
-for d in /sys/block/*; do 
+for d in /sys/block/*; do
     if [ ! -d  $d/loop/ ] && [ $(cat $d/removable) -eq 0 ]; then
         targetDisk=/dev/$(grep DEVNAME $d/uevent | cut -d= -f2)
     fi
@@ -34,7 +34,7 @@ newUsernameName=$($d --no-cancel --ok-label Next --inputbox "[5/12] Real name" 0
 newPassword=$($d --no-cancel --ok-label Next --insecure --passwordbox "[6/12] User Password" 0 0)
 newKeyboard=$($d --no-cancel --ok-label Next --inputbox "[7/12] Keyboard layout" 0 0 "uk")
 newLocale=$($d --no-cancel --ok-label Next --inputbox "[8/12] System locale" 0 0 "en_UK")
-newTimezone=$($d --no-cancel --ok-label Next --inputbox "[9/12] Timezone" 0 0 "UTC")
+newTimezone=$($d --no-cancel --ok-label Next --inputbox "[9/12] Timezone" 0 0 "Europe/Dublin")
 passwordLuks=$($d --no-cancel --ok-label Next --insecure --passwordbox "[10/12] LUKS Password" 0 0)
 
 iWantArchIso="no"
