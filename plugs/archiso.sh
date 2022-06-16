@@ -34,18 +34,19 @@ mkdir -p /home/$newUsername/unlab-archlive/arch-archiso/airootfs/usr/local/share
 cp -r /home/$newUsername/.ssh/* /home/$newUsername/unlab-archlive/arch-archiso/airootfs/usr/local/share/unlab/ssh/
 git pull
 sudo mkarchiso -v -w /home/$newUsername/unlab-archlive/temp /home/$newUsername/unlab-archlive/arch-archiso
-sudo cp -r /home/$newUsername/unlab-archlive/out/unlab_archlinux-\$(date +%Y.%m.%d)-x86_64.iso /boot/archiso.iso
 EOF
+# sudo cp -r /home/$newUsername/unlab-archlive/out/unlab_archlinux-\$(date +%Y.%m.%d)-x86_64.iso /boot/archiso.iso
+# EOF
 chmod +x /mnt/home/$newUsername/unlab-archlive/build.sh
 arch-chroot /mnt /home/$newUsername/unlab-archlive/build.sh
 
 # Recovery environment
-cat>/mnt/boot/loader/entries/archiso.conf<<EOF
-title Arch Linux Live/Rescue CD
-linux /arch/boot/vmlinuz
-initrd /arch/boot/archiso.img
-options archisobasedir=arch archisolabel=ARCHISO img_dev=/dev/sda1 img_loop=/archiso.iso
-EOF
+# cat>/mnt/boot/loader/entries/archiso.conf<<EOF
+# title Arch Linux Live/Rescue CD
+# linux /arch/boot/vmlinuz
+# initrd /arch/boot/archiso.img
+# options archisobasedir=arch archisolabel=ARCHISO img_dev=/dev/sda1 img_loop=/archiso.iso
+# EOF
 
 # Reset all perms
 arch-chroot /mnt chown $newUsername:$newUsername -R /home/$newUsername
